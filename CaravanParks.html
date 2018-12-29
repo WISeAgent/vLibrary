@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Caravan Parks - using JQuery Bootgrid - POC</title>
+	<!-- include Jquery, BootStrip and bootgrid -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<!-- bootstrap 4 >
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" ></script-->
+	<!-- bootstrap 3-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+	<!-- Jquery bootgrid -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.fa.js"></script>
+</head>
+<body>
+<script>
+TRACE_INFO=(msg)=> console.log(`[${new Date().toISOString().slice(11,23)}]`, msg)
+
+const PopulateBootgrid = async (selector, jsonData) => {
+	TRACE_INFO(`PopulateBootgrid(${typeof jsonData})`)
+	if ($.fn.bootgrid !== 'undefined') {
+		$(selector).bootgrid( {
+			caseSensitive: false,
+			searchSettings: {
+				delay: 100,		// default is 250
+				characters: 3
+			},
+			selection: true,
+			multiSelect: true,
+			sorting: true,
+			multiSort: false, 
+			padding: 2,
+			rowCount: [-1, 10, 50, 75],
+			total: jsonData.total,
+			columnSelection: true,
+			formatters: {
+				"facility": function(column, row)
+				{
+					return row.facility.sort().join(', ');
+				}
+			},
+			noResults: "No results found!",
+			search: "Search"
+		})
+		.bootgrid("append", jsonData.rows)
+	}
+}
+</script>
+	<main class="container-fluid">
+		<ul class="nav nav-pills nav-justified mt-2">
+			<li class="active nav-item"><a class="nav-link" data-toggle="pill" href="#Parks">Caravan Parks</a></li>
+		</ul>
+		<article class="tab-content">
+			<article id="Parks" class="tab-pane fade in active">
+				<section class="table-responsive">
+					<table id="tableParks" class="table table-bordered table-sm table-hover table-striped bootgrid-table">
+					<thead>
+						<tr>
+							<th data-column-id="name" data-identifier="true">name</th>
+							<th data-column-id="state">state</th>
+							<th data-column-id="town">town</th>
+							<th data-column-id="rating" data-type="numeric">rating</th>
+							<th data-column-id="facility" data-formatter="facility" data-sortable="false">Facilities</th>
+						</tr>
+					</thead>
+<script>
+	const FetchURLX=(url)=> new Promise( r => fetch(url).then( resp => resp.status >= 200 && resp.status <300 && r(resp.text())))
+	var jsonData = []; 
+	$( async function() { 
+		await FetchURLX("ParksData.json").then( body => jsonData=JSON.parse(body) )
+		await PopulateBootgrid("#tableParks", {
+					current: 1,
+					total: jsonData.length,
+					rows: jsonData
+					});
+	})
+</script>
+					</table>
+				</section>
+			</article>
+		</article>
+	</main>
+</body>	
+</html>
