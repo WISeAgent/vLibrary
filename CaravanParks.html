@@ -38,6 +38,11 @@ const PopulateBootgrid = async (selector, jsonData) => {
 			rowCount: [-1, 10, 50, 75],
 			total: jsonData.total,
 			columnSelection: true,
+			converters:{
+				facility: {
+					to: function(value) { return value.join(', '); }
+				}
+			},
 			formatters: {
 				"facility": function(column, row)
 				{
@@ -65,7 +70,7 @@ const PopulateBootgrid = async (selector, jsonData) => {
 							<th data-column-id="state">state</th>
 							<th data-column-id="town">town</th>
 							<th data-column-id="rating" data-type="numeric">rating</th>
-							<th data-column-id="facility" data-formatter="facility" data-sortable="false">Facilities</th>
+							<th data-column-id="facility" data-convertter="facility" data-formatter="facility" data-sortable="false">Facilities</th>
 						</tr>
 					</thead>
 <script>
