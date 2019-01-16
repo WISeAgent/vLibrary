@@ -38,9 +38,9 @@ const PopulateBootgrid = async (selector, jsonData) => {
 			rowCount: [-1, 10, 50, 75],
 			total: jsonData.total,
 			columnSelection: true,
-			converters:{
+			converters: {
 				facility: {
-					to: function(value) { return value.join(', '); }
+				to: (value) => value.join(', ')
 				}
 			},
 			formatters: {
