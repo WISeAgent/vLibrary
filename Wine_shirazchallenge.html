@@ -37,6 +37,14 @@ const PopulateBootgrid = async (selector, jsonData) => {
 			rowCount: [-1, 10, 50, 75],
 			total: jsonData.total,
 			columnSelection: true,
+			converters: {
+				Award: {
+					to: function(value) { return value.join(','); }
+				},
+				notes: {
+					to: function(value) { return value.join(','); }
+				}
+			},
 			formatters: {
 				"Award": function(column, row)
 				{
@@ -68,10 +76,10 @@ const PopulateBootgrid = async (selector, jsonData) => {
 							<th data-column-id="Company">Company</th>
 							<th data-column-id="vintage" data-type="numeric">vintage</th>
 							<th data-column-id="Wine" 	data-identifier="true">Wine</th>
-							<th data-column-id="Award" 	data-formatter="Award" >Awards</th>
+							<th data-column-id="Award" 	data-formatter="Award" data-converter="Award">Awards</th>
 							<th data-column-id="Score" 	data-type="numeric">Score</th>
 							<th data-column-id="RRP"   	data-type="numeric">RRP A$</th>
-							<th data-column-id="notes" 	data-formatter="notes" data-sortable="notes">Historical Awards</th>
+							<th data-column-id="notes" 	data-formatter="notes" data-converter="notes" data-sortable="notes">Historical Awards</th>
 						</tr>
 					</thead>
 					</table>
